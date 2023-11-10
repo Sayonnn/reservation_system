@@ -1,5 +1,15 @@
-<?php include '../header.php'; ?>
+<?php include '../include/header.php'; ?>
 
+
+<header>
+    <div class="row row-cols-3">
+        <div class="col order-1 ms-5">
+            <div class="d-flex justify-content-center align-items-center">
+                <img src="../images/Batangas_State_Logo.png" class="img-fluid h-25 w-25 pt-3" alt="BSU Logo">
+            </div>
+        </div>
+    </div>
+</header>
 <div class="container mt-7 pt-4">
     <div class="p-3 border bg-body-secondary">
         <div class="row">
@@ -98,4 +108,4 @@
     </div>
 </div>
 
-<?php include '../footer.php'; ?>
+<?php include '../include/footer.php'; ?>
