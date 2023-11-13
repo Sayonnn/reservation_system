@@ -1,24 +1,19 @@
 <?php include '../include/header.php' ?>
 
-<?php
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $selectedDate = $_POST["datepicker"];
-} else {
-    $selectedDate = "Sample Date";
-}
-?>
+
 
 <header>
-    <div class="row row-cols-3">
-        <div class="col order-1 ms-5">
+    <div class="row">
+        <div class="col">
             <div class="d-flex justify-content-center align-items-center">
-                <img src="../images/Batangas_State_Logo.png" class="img-fluid h-25 w-25 pt-3" alt="BSU Logo">
+                <img src="../images/Batangas_State_Logo.png" class="img pt-2" id="logo" alt="BSU Logo">
+                <div class="logo_label ms-2">Online Uniform Reservation for RGO</div>
             </div>
         </div>
-        <div class="col order-2">
-            <div class="border bg-light m-5">
-                <h1 class="text-center">Reservation Form</h1>
-            </div>
+    </div>
+    <div class="row">
+        <div class="d-flex justify-content-center align-items-center">
+            <div class="logo_sub_label">Uniform Reservation Form</div>
         </div>
     </div>
 </header>

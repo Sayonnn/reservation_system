@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center align-items-center pt-1 pb-3">
-                <a class="btn btn-secondary" href="studHome.php" role="button">Login</a>
+                <a class="btn btn-secondary" href="studHome_Main.php" role="button">Login</a>
             </div>
         </form>
     </div>
