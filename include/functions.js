@@ -32,3 +32,16 @@ function changeContent(contentId, activeButtonId) {
     // Add active class to the clicked button
     document.getElementById(activeButtonId).classList.add('active');
 }
+
+function calculatePrice(price) {
+    //var base = price;
+    var quantity = parseInt(document.getElementById("quantity").value);
+
+    if (quantity !== null && quantity > 0) {
+        var total = quantity * price;
+        document.getElementById("price").value = total;
+    } else {
+        document.getElementById("quantity").value = '';
+        document.getElementById("price").value = 0;
+    }
+}

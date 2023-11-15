@@ -1,6 +1,39 @@
-<?php include '../include/header.php' ?>
+<?php
+session_start();
 
+// Check if SRcode is set in the session
+if (!isset($_SESSION['SRcode'])) {
+    // Redirect to login page if SRcode is not set
+    header("Location: studlogin.php");
+    exit();
+}
 
+include '../include/header.php';
+include '../database/connection.php';
+
+$sr_code = $_SESSION['SRcode'];
+$itemID = $_GET['itemID'];
+$itemName = $_GET['itemName'];
+$stock = $_GET['stock'];
+$size = $_GET['size'];
+$price = $_GET['price'];
+
+if (isset($_POST['confirm'])) {
+    $chosenSize = $_POST['chosen_size'];
+    $quantity = $_POST['quantity'];
+    $Tprice = $_POST['price'];
+
+    $query = "INSERT INTO tbreservedetails (itemid, itemSize, quantity, total_price, SRcode) VALUES ('{$itemID}','{$chosenSize}','{$quantity}','{$Tprice}','{$sr_code}')";
+    $reserve = mysqli_query($conn, $query);
+
+    if (!$reserve) {
+        echo "Something went wrong: " . mysqli_connect_error();
+    } else {
+        echo "<script type='text/javascript'>alert('Your reservation was sent to the RGO.'); window.location.href = 'studHome.php';</script>";
+    }
+}
+
+?>
 
 <header>
     <div class="row">
@@ -26,45 +59,37 @@
                     <label for="SRcode" class="col-form-label">SR-Code</label>
                 </div>
                 <div class="col-auto">
-                    <input type="text" id="SRcode" class="form-control">
+                    <input type="text" id="SRcode" class="form-control" value="<?php echo $sr_code ?>" readonly>
                 </div>
             </div>
             <div class="row g-3 p-2 pt-3 align-items-center justify-content-center">
                 <div class="col-auto">
-                    <label for="selectItem" class="col-form-label">Item</label>
+                    <label for="item" class="col-form-label">Item</label>
                 </div>
                 <div class="col-auto">
-                    <div class="btn-group">
-                        <select id="selectItem" class="form-select">
-                            <option value="none">Choose</option>
-                            <option value="Value 1">Item 1</option>
-                            <option value="Value 2">Item 2</option>
-                            <option value="Value 3">Item 3</option>
-                        </select>
-                    </div>
+                    <input type="text" id="item" name="item" class="form-control" value="<?php echo $itemName ?>"
+                        readonly>
                 </div>
             </div>
             <div class="row g-3 p-2 pt-3 align-items-center justify-content-center">
                 <div class="col-auto">
-                    <label for="selectSize" class="col-form-label">Size</label>
+                    <label for="size" class="d-flex col-form-label justify-content-center">Sizes Available:</label>
+                    <input type="text" id="size" name="size" class="form-control m-1" value="<?php echo $size ?>"
+                        readonly>
                 </div>
                 <div class="col-auto">
-                    <div class="btn-group">
-                        <select id="selectSize" class="form-select">
-                            <option value="none">Choose</option>
-                            <option value="Value 1">Size 1</option>
-                            <option value="Value 2">Size 2</option>
-                            <option value="Value 3">Size 3</option>
-                        </select>
-                    </div>
+                    <label for="chosen_size" class="d-flex col-form-label justify-content-center">Size:</label>
+                    <input type="text" id="chosen_size" name="chosen_size" class="form-control m-1"
+                        placeholder="Please specify the size." required>
                 </div>
             </div>
             <div class="row g-3 p-2 pt-3 align-items-center justify-content-center">
                 <div class="col-auto">
-                    <label for="amount" class="col-form-label">Amount</label>
+                    <label for="quantity" class="col-form-label">Quantity</label>
                 </div>
                 <div class="col-auto">
-                    <input type="text" id="amount" class="form-control" value=1>
+                    <input type="number" id="quantity" name="quantity" class="form-control" value=1 oninput="calculatePrice(<?php echo $price; ?>)"
+                        required>
                 </div>
             </div>
             <div class="row g-3 p-2 pt-3 align-items-center justify-content-center">
@@ -72,7 +97,8 @@
                     <label for="stocks" class="col-form-label">Remaining Stock</label>
                 </div>
                 <div class="col-auto">
-                    <input type="text" id="stocks" class="form-control" readonly>
+                    <input type="text" id="stocks" name="stocks" class="form-control" value="<?php echo $stock ?>"
+                        readonly>
                 </div>
             </div>
             <div class="row g-3 p-2 pt-3 align-items-center justify-content-center">
@@ -80,11 +106,14 @@
                     <label for="price" class="col-form-label">Price</label>
                 </div>
                 <div class="col-auto">
-                    <input type="text" id="price" class="form-control" readonly>
+                    <input type="text" id="price" name="price" class="form-control" value="<?php echo $price ?>"
+                        readonly>
                 </div>
             </div>
-            <a class="btn btn-outline-secondary m-2">Submit</a>
-            <a href="studHome_Main.php" class="btn btn-outline-secondary m-2">Back</a>
+            <div class="d-flex justify-content-center align-items-center pt-1 pb-3">
+                <button class="btn btn-danger m-2" id="confirm" name="confirm" type="submit">Confirm</button>
+                <a href="studHome.php" class="btn btn-danger m-2" id="cancel" name="cancel">Cancel</a>
+            </div>
         </form>
     </div>
 </div>

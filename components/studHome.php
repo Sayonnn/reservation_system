@@ -1,5 +1,20 @@
-<?php include '../include/header.php'; ?>
-<?php include '../database/connection.php'; ?>
+<?php
+session_start();
+
+// Check if SRcode is set in the session
+if (!isset($_SESSION['SRcode'])) {
+    // Redirect to login page if SRcode is not set
+    header("Location: studlogin.php");
+    exit();
+}
+
+include '../include/header.php';
+include '../database/connection.php';
+
+$reservationQuery = "SELECT * FROM tbreservedetails WHERE SRcode = '{$_SESSION['SRcode']}'";
+$reservationResult = mysqli_query($conn, $reservationQuery);
+$numReservations = mysqli_num_rows($reservationResult);
+?>
 
 <header>
     <div class="row">
@@ -36,12 +51,60 @@
             </ul>
         </div>
 
+        <!--Main Home Section/Tab-->
         <div class="card-body" id="studHome_Main" style="display: block;">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <table id="itemList">
+                <thead>
+                    <tr>
+                        <th class="text-center">Reservation ID</th>
+                        <th class="text-center">Reservation Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if ($numReservations > 0) {
+                        $query = "SELECT * FROM tbreservedetails JOIN tbproductinfo ON tbreservedetails.itemid = tbproductinfo.itemid";
+                        $display = mysqli_query($conn, $query);
+
+                        while ($row = mysqli_fetch_assoc($display)) {
+                            $resID = $row['reservationid'];
+                            $itemName = $row['itemname'];
+                            $itemPIC = $row['item_img'];
+                            $base64IMG = base64_encode($itemPIC);
+                            $size = $row['itemSize'];
+                            $quantity = $row['quantity'];
+                            $Tprice = $row['total_price'];
+
+                            echo "<tr class='item'>";
+                            echo "<th><div class='d-flex justify-content-center'>{$resID}</div></th>";
+                            echo "<td>
+                            <div class='row row-cols-2 '>
+                                <div class='row'>
+                                    <div class='d-flex justify-content-center align-items-center'>
+                                        <img src='data:image/jpeg;base64,{$base64IMG}' alt='Item 1' class='item-image' onclick=\"openModal('{$base64IMG}')\">
+                                    </div>
+                                </div>
+                                <div class='col'>
+                                    <div class='desc'>Item: {$itemName}</div>
+                                    <div class='desc'>Size: {$size}</div>
+                                    <div class='desc'>Quantity: {$quantity}</div>
+                                    <div class='desc'>Price: {$Tprice}</div>
+                                </div>
+                            </div>
+                        </td>";
+                        }
+                    } else {
+                        echo "You currently have no reservation.";
+                    }
+                    ?>
+                </tbody>
+            </table>
+            <div id="bigPIC_container" class="modal">
+                <img class="modal-content" id="bigPIC">
+            </div>
         </div>
 
+        <!--Home Page Uniform Section/Tab-->
         <div class="card-body" id="studHome_ItemList" style="display: none;">
             <table id="itemList">
                 <thead>
@@ -57,10 +120,11 @@
                     $display = mysqli_query($conn, $query);
 
                     while ($row = mysqli_fetch_assoc($display)) {
+                        $itemID = $row['itemid'];
                         $itemName = $row['itemname'];
                         $itemPIC = $row['item_img'];
                         $base64IMG = base64_encode($itemPIC);
-                        $size = $row['size'];
+                        $size = $row['sizes'];
                         $price = $row['price'];
                         $stock = $row['stocks'];
 
@@ -82,7 +146,7 @@
                     </td>";
                         echo "<td>
                         <div class='d-flex justify-content-center'>
-                            <a href='reservationForm_Stud.php' class='btn btn-danger reserve-button'>Reserve</a>
+                        <a href='reservationForm_Stud.php?itemID={$itemID}&itemName={$itemName}&stock={$stock}&size={$size}&price={$price}' class='btn btn-danger reserve-button'>Reserve</a>
                         </div>
                     </td>";
                     }
@@ -94,11 +158,12 @@
             </div>
         </div>
 
+        <!-- Log Out Section/Tab -->
         <div class="card-body" id="studHome_Logout" style="display: none;">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <button type="submit" name="logout" class="btn btn-primary">Logout</button>
         </div>
+
+
     </div>
 </div>
 
