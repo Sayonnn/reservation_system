@@ -22,18 +22,27 @@
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="true" href="studHome_Main.php">Home</a>
+                    <button class="nav-link active" aria-current="true" id="pills-home-tab"
+                        onclick="changeContent('studHome_Main', 'pills-home-tab')">Home</button>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="studHome_ItemList.php">Uniforms</a>
+                    <button class="nav-link" id="pills-profile-tab"
+                        onclick="changeContent('studHome_ItemList', 'pills-profile-tab')">Uniforms</button>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="studHome_Logout.php">Log Out</a>
+                    <button class="nav-link" id="pills-contact-tab"
+                        onclick="changeContent('studHome_Logout', 'pills-contact-tab')">Log Out</button>
                 </li>
             </ul>
         </div>
 
-        <div class="card-body">
+        <div class="card-body" id="studHome_Main" style="display: block;">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+
+        <div class="card-body" id="studHome_ItemList" style="display: none;">
             <table id="itemList">
                 <thead>
                     <tr>
@@ -61,7 +70,7 @@
                         <div class='row row-cols-2 '>
                             <div class='row'>
                                 <div class='d-flex justify-content-center align-items-center'>
-                                    <img src='data:image/jpeg;base64,{$base64IMG}' alt='Item 1' class='item-image' onclick=\"openModal('{$base64IMG}', '{$itemName}')\">
+                                    <img src='data:image/jpeg;base64,{$base64IMG}' alt='Item 1' class='item-image' onclick=\"openModal('{$base64IMG}')\">
                                 </div>
                             </div>
                             <div class='col'>
@@ -80,10 +89,15 @@
                     ?>
                 </tbody>
             </table>
+            <div id="bigPIC_container" class="modal">
+                <img class="modal-content" id="bigPIC">
+            </div>
         </div>
-        <div id="myModal" class="modal">
-            <img class="modal-content" id="modalImage">
-            <div id="modalCaption"></div>
+
+        <div class="card-body" id="studHome_Logout" style="display: none;">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
         </div>
     </div>
 </div>

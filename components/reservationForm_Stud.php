@@ -83,7 +83,8 @@
                     <input type="text" id="price" class="form-control" readonly>
                 </div>
             </div>
-            <button class="btn btn-outline-secondary m-2">Submit</button>
+            <a class="btn btn-outline-secondary m-2">Submit</a>
+            <a href="studHome_Main.php" class="btn btn-outline-secondary m-2">Back</a>
         </form>
     </div>
 </div>

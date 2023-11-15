@@ -18,11 +18,11 @@ img#logo {
     width: 98%;
 }
 
-.nav-item a.nav-link {
+.nav-item button.nav-link {
     color: #585656;
 }
 
-.nav-item a.nav-link.active {
+.nav-item button.nav-link.active {
     color: #ff0000;
 }
 
@@ -49,7 +49,7 @@ th {
     object-fit: cover;
 }
 
-#myModal {
+#bigPIC_container {
     display: none;
     justify-content: center;
     align-items: center;
@@ -63,7 +63,7 @@ th {
     background-color: #493c4e9a;
 }
 
-#modalImage {
+#bigPIC {
     width: 550px;
     height: auto;
 }
