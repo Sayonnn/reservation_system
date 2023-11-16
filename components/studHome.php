@@ -74,21 +74,30 @@ $numReservations = mysqli_num_rows($reservationResult);
                             $size = $row['itemSize'];
                             $quantity = $row['quantity'];
                             $Tprice = $row['total_price'];
+                            $resDate = $row['reservation_date'];
 
                             echo "<tr class='item'>";
                             echo "<th><div class='d-flex justify-content-center'>{$resID}</div></th>";
                             echo "<td>
-                            <div class='row row-cols-2 '>
+                            <div class='row row-cols-3 '>
                                 <div class='row'>
                                     <div class='d-flex justify-content-center align-items-center'>
                                         <img src='data:image/jpeg;base64,{$base64IMG}' alt='Item 1' class='item-image' onclick=\"openModal('{$base64IMG}')\">
                                     </div>
                                 </div>
                                 <div class='col'>
-                                    <div class='desc'>Item: {$itemName}</div>
-                                    <div class='desc'>Size: {$size}</div>
-                                    <div class='desc'>Quantity: {$quantity}</div>
-                                    <div class='desc'>Price: {$Tprice}</div>
+                                    <div class='desc d-flex justify-content-center'>Item:</div>
+                                    <div class='desc d-flex justify-content-center'>Size:</div>
+                                    <div class='desc d-flex justify-content-center'>Quantity:</div>
+                                    <div class='desc d-flex justify-content-center'>Price:</div>
+                                    <div class='desc d-flex justify-content-center'>Reserved for:</div>
+                                </div>
+                                <div class='col'>
+                                    <div class='desc d-flex justify-content-center'>{$itemName}</div>
+                                    <div class='desc d-flex justify-content-center'>{$size}</div>
+                                    <div class='desc d-flex justify-content-center'>{$quantity}</div>
+                                    <div class='desc d-flex justify-content-center'>{$Tprice}</div>
+                                    <div class='desc d-flex justify-content-center'>{$resDate}</div>
                                 </div>
                             </div>
                         </td>";
@@ -160,10 +169,21 @@ $numReservations = mysqli_num_rows($reservationResult);
 
         <!-- Log Out Section/Tab -->
         <div class="card-body" id="studHome_Logout" style="display: none;">
-            <button type="submit" name="logout" class="btn btn-primary">Logout</button>
+        <?php
+            $sr = $_SESSION['SRcode'];
+            $query = "SELECT * FROM tbstudinfo WHERE SRcode = {$sr}";
+            $display = mysqli_query($conn, $query);
+
+            while ($row = mysqli_fetch_assoc($display)) {
+            }
+        ?>
+        <div class="d-flex justify-content-center">
+            <h3>You are currently logged in as </h3>
         </div>
-
-
+            <div class="d-flex justify-content-center">
+                <a type="submit" name="logout" class="btn btn-primary" href="studlogin.php">Logout</a>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -22,8 +22,9 @@ if (isset($_POST['confirm'])) {
     $chosenSize = $_POST['chosen_size'];
     $quantity = $_POST['quantity'];
     $Tprice = $_POST['price'];
+    $resDate = $_POST['Rdate'];
 
-    $query = "INSERT INTO tbreservedetails (itemid, itemSize, quantity, total_price, SRcode) VALUES ('{$itemID}','{$chosenSize}','{$quantity}','{$Tprice}','{$sr_code}')";
+    $query = "INSERT INTO tbreservedetails (itemid, itemSize, quantity, total_price, SRcode, reservation_date) VALUES ('{$itemID}','{$chosenSize}','{$quantity}','{$Tprice}','{$sr_code}','{$resDate}')";
     $reserve = mysqli_query($conn, $query);
 
     if (!$reserve) {
@@ -99,6 +100,14 @@ if (isset($_POST['confirm'])) {
                 <div class="col-auto">
                     <input type="text" id="stocks" name="stocks" class="form-control" value="<?php echo $stock ?>"
                         readonly>
+                </div>
+            </div>
+            <div class="row g-3 p-2 pt-3 align-items-center justify-content-center">
+                <div class="col-auto">
+                    <label for="Rdate" class="col-form-label">Reserve Date</label>
+                </div>
+                <div class="col-auto">
+                    <input type="date" id="Rdate" name="Rdate" class="form-control" required>
                 </div>
             </div>
             <div class="row g-3 p-2 pt-3 align-items-center justify-content-center">

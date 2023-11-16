@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 15, 2023 at 03:33 PM
+-- Generation Time: Nov 16, 2023 at 02:47 AM
 -- Server version: 8.0.31
 -- PHP Version: 8.0.26
 
@@ -122,20 +122,20 @@ CREATE TABLE IF NOT EXISTS `tbreservedetails` (
   `quantity` int NOT NULL,
   `total_price` decimal(10,0) NOT NULL,
   `SRcode` int NOT NULL,
+  `reservation_date` date NOT NULL,
   PRIMARY KEY (`reservationid`),
   UNIQUE KEY `reservationid` (`reservationid`),
   UNIQUE KEY `reservationid_2` (`reservationid`),
   KEY `itemid` (`itemid`),
   KEY `studid` (`SRcode`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `tbreservedetails`
 --
 
-INSERT INTO `tbreservedetails` (`reservationid`, `itemid`, `itemSize`, `quantity`, `total_price`, `SRcode`) VALUES
-(5, 5, 'Small', 2, '700', 21),
-(3, 8, '20', 1, '380', 21);
+INSERT INTO `tbreservedetails` (`reservationid`, `itemid`, `itemSize`, `quantity`, `total_price`, `SRcode`, `reservation_date`) VALUES
+(6, 5, 'Small', 1, '350', 21, '2023-12-12');
 
 -- --------------------------------------------------------
 
