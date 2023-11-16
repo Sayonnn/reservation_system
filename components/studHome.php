@@ -11,9 +11,6 @@ if (!isset($_SESSION['SRcode'])) {
 include '../include/header.php';
 include '../database/connection.php';
 
-$reservationQuery = "SELECT * FROM tbreservedetails WHERE SRcode = '{$_SESSION['SRcode']}'";
-$reservationResult = mysqli_query($conn, $reservationQuery);
-$numReservations = mysqli_num_rows($reservationResult);
 ?>
 
 <header>
@@ -62,8 +59,11 @@ $numReservations = mysqli_num_rows($reservationResult);
                 </thead>
                 <tbody>
                     <?php
+                    $reservationQuery = "SELECT * FROM tbreservedetails WHERE SRcode = '{$_SESSION['SRcode']}'";
+                    $reservationResult = mysqli_query($conn, $reservationQuery);
+                    $numReservations = mysqli_num_rows($reservationResult);
                     if ($numReservations > 0) {
-                        $query = "SELECT * FROM tbreservedetails JOIN tbproductinfo ON tbreservedetails.itemid = tbproductinfo.itemid";
+                        $query = "SELECT * FROM tbreservedetails JOIN tbproductinfo ON tbreservedetails.itemid = tbproductinfo.itemid WHERE SRcode='{$_SESSION['SRcode']}'";
                         $display = mysqli_query($conn, $query);
 
                         while ($row = mysqli_fetch_assoc($display)) {
@@ -155,7 +155,7 @@ $numReservations = mysqli_num_rows($reservationResult);
                     </td>";
                         echo "<td>
                         <div class='d-flex justify-content-center'>
-                        <a href='reservationForm_Stud.php?itemID={$itemID}&itemName={$itemName}&stock={$stock}&size={$size}&price={$price}' class='btn btn-danger reserve-button'>Reserve</a>
+                        <a href='calendar.php?itemID={$itemID}&itemName={$itemName}&stock={$stock}&size={$size}&price={$price}' class='btn btn-danger reserve-button'>Reserve</a>
                         </div>
                     </td>";
                     }
@@ -169,21 +169,42 @@ $numReservations = mysqli_num_rows($reservationResult);
 
         <!-- Log Out Section/Tab -->
         <div class="card-body" id="studHome_Logout" style="display: none;">
-        <?php
+            <?php
             $sr = $_SESSION['SRcode'];
-            $query = "SELECT * FROM tbstudinfo WHERE SRcode = {$sr}";
-            $display = mysqli_query($conn, $query);
+            $query = "SELECT * FROM tbstudinfo WHERE SRcode = ?";
 
-            while ($row = mysqli_fetch_assoc($display)) {
+            // Use prepared statement to prevent SQL injection
+            $stmt = mysqli_prepare($conn, $query);
+            mysqli_stmt_bind_param($stmt, "s", $sr);
+            mysqli_stmt_execute($stmt);
+
+            // Check if the query was successful
+            if ($stmt) {
+                $nameFetch = mysqli_stmt_get_result($stmt);
+
+                // Check if there is a row in the result
+                if ($row = mysqli_fetch_assoc($nameFetch)) {
+                    $Fname = $row['firstname'];
+                    $Lname = $row['lastname'];
+
+                    echo "<div class='d-flex justify-content-center m-2'>
+                            <h3 class='text-center'>You are currently logged in as {$Fname} {$Lname}. Do you want to logout?</h3>
+                        </div>";
+                    echo "<div class='d-flex justify-content-center'>
+                            <button type='button' name='logout' class='btn btn-danger' onclick='logoutMes()'>Logout</button>
+                        </div>";
+                } else {
+                    echo "Error: User not found.";
+                }
+
+                // Close the statement
+                mysqli_stmt_close($stmt);
+            } else {
+                echo "Error in the query: " . mysqli_error($conn);
             }
-        ?>
-        <div class="d-flex justify-content-center">
-            <h3>You are currently logged in as </h3>
+            ?>
         </div>
-            <div class="d-flex justify-content-center">
-                <a type="submit" name="logout" class="btn btn-primary" href="studlogin.php">Logout</a>
-            </div>
-        </div>
+
     </div>
 </div>
 

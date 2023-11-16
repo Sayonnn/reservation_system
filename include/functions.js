@@ -45,3 +45,13 @@ function calculatePrice(price) {
         document.getElementById("price").value = 0;
     }
 }
+
+function logoutMes() {
+    var confirmLogout = confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+        // Redirect to the logout page if the user clicks "OK"
+        window.location.href = 'studlogin.php';
+    } else {
+        // Do nothing if the user clicks "Cancel"
+    }
+}

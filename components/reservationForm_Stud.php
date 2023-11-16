@@ -17,12 +17,12 @@ $itemName = $_GET['itemName'];
 $stock = $_GET['stock'];
 $size = $_GET['size'];
 $price = $_GET['price'];
+$resDate = $_GET['date'];
 
 if (isset($_POST['confirm'])) {
     $chosenSize = $_POST['chosen_size'];
     $quantity = $_POST['quantity'];
     $Tprice = $_POST['price'];
-    $resDate = $_POST['Rdate'];
 
     $query = "INSERT INTO tbreservedetails (itemid, itemSize, quantity, total_price, SRcode, reservation_date) VALUES ('{$itemID}','{$chosenSize}','{$quantity}','{$Tprice}','{$sr_code}','{$resDate}')";
     $reserve = mysqli_query($conn, $query);
@@ -89,8 +89,8 @@ if (isset($_POST['confirm'])) {
                     <label for="quantity" class="col-form-label">Quantity</label>
                 </div>
                 <div class="col-auto">
-                    <input type="number" id="quantity" name="quantity" class="form-control" value=1 oninput="calculatePrice(<?php echo $price; ?>)"
-                        required>
+                    <input type="number" id="quantity" name="quantity" class="form-control" value=1
+                        oninput="calculatePrice(<?php echo $price; ?>)" required>
                 </div>
             </div>
             <div class="row g-3 p-2 pt-3 align-items-center justify-content-center">
@@ -107,7 +107,8 @@ if (isset($_POST['confirm'])) {
                     <label for="Rdate" class="col-form-label">Reserve Date</label>
                 </div>
                 <div class="col-auto">
-                    <input type="date" id="Rdate" name="Rdate" class="form-control" required>
+                    <input type="date" id="Rdate" name="Rdate" class="form-control" value="<?php echo $resDate ?>"
+                        readonly>
                 </div>
             </div>
             <div class="row g-3 p-2 pt-3 align-items-center justify-content-center">
@@ -121,7 +122,7 @@ if (isset($_POST['confirm'])) {
             </div>
             <div class="d-flex justify-content-center align-items-center pt-1 pb-3">
                 <button class="btn btn-danger m-2" id="confirm" name="confirm" type="submit">Confirm</button>
-                <a href="studHome.php" class="btn btn-danger m-2" id="cancel" name="cancel">Cancel</a>
+                <a href="calendar.php?itemID=<?php echo $itemID?>&itemName=<?php echo $itemName?>&stock=<?php echo $stock?>&size=<?php echo $size?>&price=<?php echo $price?>" class="btn btn-danger m-2" id="cancel" name="cancel">Cancel</a>
             </div>
         </form>
     </div>
