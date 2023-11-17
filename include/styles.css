@@ -1,3 +1,15 @@
+body {
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    background-size: cover;
+    background-blend-mode: overlay;
+    background-image: url(../images/BSU_bg.jpg);
+}
+
 img#logo {
     height: 100px;
     width: 100px;
@@ -13,7 +25,7 @@ img#logo {
     font-size: 20px;
 }
 
-#itemList{
+#itemList {
     margin: 10px;
     width: 98%;
 }

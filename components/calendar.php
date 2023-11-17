@@ -242,6 +242,9 @@ function build_calendar($month, $year)
 
             </div>
         </div>
+        <div class="d-flex justify-content-center align-items-center pt-1 pb-3">
+            <a href="studHome.php" class="btn btn-danger m-2" id="cancel" name="cancel">Cancel</a>
+        </div>
     </div>
 </body>
 
