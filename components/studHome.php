@@ -11,6 +11,9 @@ if (!isset($_SESSION['SRcode'])) {
 include '../include/header.php';
 include '../database/connection.php';
 
+$srcode = $_SESSION['SRcode'];
+
+
 ?>
 
 <header>
@@ -50,11 +53,27 @@ include '../database/connection.php';
 
         <!--Main Home Section/Tab-->
         <div class="card-body" id="studHome_Main" style="display: block;">
+            <!--Legend-->
+            <div class="d-flex align-text-center justify-content-center">
+                <div class="mx-1" style="font-size:10px;">
+                    <button class="btn btn-success btn-sm mx-0 "></button>
+                    Accepted
+                </div>
+                <div class="mx-1" style="font-size:10px;">
+                    <button class="btn btn-warning btn-sm mx-0"></button>
+                    Pending
+                </div>
+                <div class="mx-1" style="font-size:10px;">
+                    <button class="btn btn-danger btn-sm mx-0"></button>
+                    Cancelled
+                </div>
+            </div>
             <table id="itemList">
                 <thead>
                     <tr>
                         <th class="text-center">Reservation ID</th>
                         <th class="text-center">Reservation Details</th>
+                        <th class="text-center">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,10 +82,16 @@ include '../database/connection.php';
                     $reservationResult = mysqli_query($conn, $reservationQuery);
                     $numReservations = mysqli_num_rows($reservationResult);
                     if ($numReservations > 0) {
-                        $query = "SELECT * FROM tbreservedetails JOIN tbproductinfo ON tbreservedetails.itemid = tbproductinfo.itemid WHERE SRcode='{$_SESSION['SRcode']}'";
+                        $query = "SELECT * FROM tbreservedetails JOIN tbproductinfo ON tbreservedetails.itemid = tbproductinfo.itemid WHERE SRcode='{$_SESSION['SRcode']}' ORDER BY reservationid DESC";
                         $display = mysqli_query($conn, $query);
 
+                        $sqlStatus = "SELECT * FROM tbstatus JOIN tbreservedetails ON tbstatus.reservationid = tbreservedetails.reservationid WHERE `SRcode` = '$srcode'";
+                        $color = '';
+                        $getStatus = mysqli_query($conn, $sqlStatus);
+
+
                         while ($row = mysqli_fetch_assoc($display)) {
+                            $row1 = mysqli_fetch_assoc($getStatus);
                             $resID = $row['reservationid'];
                             $itemName = $row['itemname'];
                             $itemPIC = $row['item_img'];
@@ -74,33 +99,52 @@ include '../database/connection.php';
                             $size = $row['itemSize'];
                             $quantity = $row['quantity'];
                             $Tprice = $row['total_price'];
-                            $resDate = $row['reservation_date'];
+                            $resInfo = $row1['statusNote'];
+    
+
+                            //
+                            $status = $row1['resStatus'];
+                            if ($status === 'pending') {
+                                $color = 'warning';
+                            } elseif ($status === 'accepted') {
+                                $color = 'success';
+                            } elseif ($status === 'canceled') {
+                                $color = 'danger';
+                            } elseif ($status === 'out of stock') {
+                                $color = 'secondary';
+                            } else {
+                                $color = 'secondary';
+                            }
 
                             echo "<tr class='item'>";
                             echo "<th><div class='d-flex justify-content-center'>{$resID}</div></th>";
                             echo "<td>
-                            <div class='row row-cols-3 '>
-                                <div class='row'>
-                                    <div class='d-flex justify-content-center align-items-center'>
-                                        <img src='data:image/jpeg;base64,{$base64IMG}' alt='Item 1' class='item-image' onclick=\"openModal('{$base64IMG}')\">
+                                    <div class='row row-cols-3 '>
+                                        <div class='row '>
+                                            <div class='d-flex justify-content-center align-items-center'>
+                                                <img src='data:image/jpeg;base64,{$base64IMG}' alt='Item 1' class='item-image' onclick=\"openModal('{$base64IMG}')\">
+                                            </div>
+                                        </div>
+                                        <div class='col'>
+                                            <div class='desc d-flex justify-content-center'>Item:</div>
+                                            <div class='desc d-flex justify-content-center'>Size:</div>
+                                            <div class='desc d-flex justify-content-center'>Quantity:</div>
+                                            <div class='desc d-flex justify-content-center'>Price:</div>
+                                        </div>
+                                        <div class='col'>
+                                            <div class='desc d-flex justify-content-center'>{$itemName}</div>
+                                            <div class='desc d-flex justify-content-center'>{$size}</div>
+                                            <div class='desc d-flex justify-content-center'>{$quantity}</div>
+                                            <div class='desc d-flex justify-content-center'>{$Tprice}</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class='col'>
-                                    <div class='desc d-flex justify-content-center'>Item:</div>
-                                    <div class='desc d-flex justify-content-center'>Size:</div>
-                                    <div class='desc d-flex justify-content-center'>Quantity:</div>
-                                    <div class='desc d-flex justify-content-center'>Price:</div>
-                                    <div class='desc d-flex justify-content-center'>Reserved for:</div>
-                                </div>
-                                <div class='col'>
-                                    <div class='desc d-flex justify-content-center'>{$itemName}</div>
-                                    <div class='desc d-flex justify-content-center'>{$size}</div>
-                                    <div class='desc d-flex justify-content-center'>{$quantity}</div>
-                                    <div class='desc d-flex justify-content-center'>{$Tprice}</div>
-                                    <div class='desc d-flex justify-content-center'>{$resDate}</div>
-                                </div>
-                            </div>
-                        </td>";
+                                    <th>
+                                        <div class='d-flex justify-content-center'>
+                                            <button type='button' class='btn btn-$color btn-lg' data-bs-toggle='modal' data-bs-target='#statusInfo'>  </button>
+                                        </div>  
+                                    </th>
+                            </td>
+                            </tr>";
                         }
                     } else {
                         echo "You currently have no reservation.";
@@ -108,6 +152,22 @@ include '../database/connection.php';
                     ?>
                 </tbody>
             </table>
+            <div class="modal fade" id="statusInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="statusInfoLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="statusInfoLabel">Status Information</h5>
+                        </div>
+                        <div class="modal-body">
+                            <p><?php echo "$resInfo"; ?></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="bigPIC_container" class="modal">
                 <img class="modal-content" id="bigPIC">
             </div>
@@ -155,7 +215,7 @@ include '../database/connection.php';
                     </td>";
                         echo "<td>
                         <div class='d-flex justify-content-center'>
-                        <a href='calendar.php?itemID={$itemID}&itemName={$itemName}&stock={$stock}&size={$size}&price={$price}' class='btn btn-danger reserve-button'>Reserve</a>
+                        <a href='reservationForm_Stud.php?itemID={$itemID}&itemName={$itemName}&stock={$stock}&size={$size}&price={$price}' class='btn btn-danger reserve-button'>Reserve</a>
                         </div>
                     </td>";
                     }

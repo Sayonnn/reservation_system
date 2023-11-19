@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 16, 2023 at 03:10 PM
+-- Generation Time: Nov 19, 2023 at 05:27 AM
 -- Server version: 8.0.31
 -- PHP Version: 8.0.26
 
@@ -20,19 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `db_nt3101`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `status`
---
-
-DROP TABLE IF EXISTS `status`;
-CREATE TABLE IF NOT EXISTS `status` (
-  `reservationid` int DEFAULT NULL,
-  `reservationstatus` varchar(50) NOT NULL,
-  KEY `reservationid` (`reservationid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -130,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `tbreservedetails` (
   UNIQUE KEY `reservationid_2` (`reservationid`),
   KEY `itemid` (`itemid`),
   KEY `studid` (`SRcode`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `tbreservedetails`
@@ -138,8 +125,29 @@ CREATE TABLE IF NOT EXISTS `tbreservedetails` (
 
 INSERT INTO `tbreservedetails` (`reservationid`, `itemid`, `itemSize`, `quantity`, `total_price`, `SRcode`, `reservation_date`) VALUES
 (8, 9, '20', 2, '700', '21-30452', '2023-12-19'),
-(9, 9, '30', 3, '1050', '21-35348', '2023-11-07'),
-(10, 5, 'Small', 3, '1050', '21-35348', '2023-11-24');
+(12, 5, '18', 2, '700', '21-30452', '2023-11-24');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbstatus`
+--
+
+DROP TABLE IF EXISTS `tbstatus`;
+CREATE TABLE IF NOT EXISTS `tbstatus` (
+  `reservationid` int DEFAULT NULL,
+  `resStatus` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `statusNote` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  KEY `reservationid` (`reservationid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `tbstatus`
+--
+
+INSERT INTO `tbstatus` (`reservationid`, `resStatus`, `statusNote`) VALUES
+(12, 'canceled', 'Out of Stock'),
+(8, 'accepted', 'Item Picked Up');
 
 -- --------------------------------------------------------
 
